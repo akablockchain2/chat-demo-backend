@@ -32,7 +32,7 @@ jobs:
 
       - name: Set image public using GitHub CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
+          GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
           # Get the package ID for the Docker image
           PACKAGE_ID=$(gh api graphql -f query='
