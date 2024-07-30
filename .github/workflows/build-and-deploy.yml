@@ -39,13 +39,13 @@ jobs:
 
       - name: Setup kubeconfig
         env:
-          KUBECONFIG: /root/.kube/config
+          KUBECONFIG: ~/.kube/config
         run: |
-          mkdir -p /root/.kube
-          aws eks update-kubeconfig --region us-east-1 --name demo --kubeconfig /root/.kube/config
+          mkdir -p ~/.kube
+          aws eks update-kubeconfig --region us-east-1 --name demo --kubeconfig ~/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
-          cat /root/.kube/config
+          cat ~/.kube/config
           kubectl apply -f k8s/k8s-deployment.yaml
           kubectl apply -f k8s/k8s-service.yaml
