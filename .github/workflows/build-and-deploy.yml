@@ -30,6 +30,12 @@ jobs:
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/chat-demo-backend:latest
 
+      - name: Install AWS CLI
+        run: |
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          sudo ./aws/install
+
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v2
         with:
@@ -38,10 +44,14 @@ jobs:
           aws-region: us-east-1
 
       - name: Setup kubeconfig
+        env:
+          KUBECONFIG: /root/.kube/config
         run: |
-          aws eks update-kubeconfig --region us-east-1 --name demo
+          mkdir -p /root/.kube
+          aws eks update-kubeconfig --region us-east-1 --name demo --kubeconfig /root/.kube/config
 
       - name: Deploy to Kubernetes
         run: |
+          cat /root/.kube/config
           kubectl apply -f k8s/k8s-deployment.yaml
           kubectl apply -f k8s/k8s-service.yaml
