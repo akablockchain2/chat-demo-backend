@@ -34,5 +34,5 @@ jobs:
         run: |
           curl -H "Authorization: token ${{ secrets.PAT }}" \
                -H "Accept: application/vnd.github.v3+json" \
-               https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/my-python-app/versions \
+               https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/chat-demo-backend/versions \
                -d '{"visibility": "public"}'
