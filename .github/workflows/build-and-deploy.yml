@@ -34,26 +34,25 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: |
-          # Get the package ID for the Docker image
-          PACKAGE_ID=$(gh api graphql -f query='
+          # Get the package version ID for the Docker image
+          PACKAGE_VERSION_ID=$(gh api graphql -f query='
             query {
               user(login: "${{ github.repository_owner }}") {
                 packages(first: 100, names: ["chat-demo-backend"]) {
                   nodes {
-                    id
+                    versions(first: 1) {
+                      nodes {
+                        id
+                      }
+                    }
                   }
                 }
               }
             }
-          ' --jq '.data.user.packages.nodes[0].id')
+          ' --jq '.data.user.packages.nodes[0].versions.nodes[0].id')
           
           # Make the Docker image public
-          gh api graphql -f query='
-            mutation($packageId: ID!) {
-              updatePackageVisibility(input: {packageId: $packageId, visibility: PUBLIC}) {
-                package {
-                  id
-                }
-              }
-            }
-          ' -F packageId=$PACKAGE_ID
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github.v3+json" \
+            /user/packages/container/chat-demo-backend/versions/$PACKAGE_VERSION_ID \
+            -f visibility=public
