@@ -29,3 +29,15 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/chat-demo-backend:latest
+
+      - name: Set up K8s context
+        env:
+          KUBECONFIG: ${{ secrets.KUBECONFIG }}
+        run: |
+          echo "${KUBECONFIG}" > k8s_config
+          export KUBECONFIG=k8s_config
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/k8s-deployment.yaml
+          kubectl apply -f k8s/k8s-service.yaml

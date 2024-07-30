@@ -13,8 +13,8 @@ spec:
         app: chat-app
     spec:
       containers:
-        - name: chat-app
-          image: alexanderrodnin/python-app:latest
+        - name: chat-demo-backend
+          image: ghcr.io/akablockchain2/chat-demo-backend:latest
           ports:
             - containerPort: 5000
           env:
