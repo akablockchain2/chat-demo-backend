@@ -43,7 +43,6 @@ jobs:
 
       - name: Verify AWS and kubectl setup
         run: |
-          aws sts get-caller-identity
           kubectl --kubeconfig ~/.kube/config get svc
 
       - name: Deploy to Kubernetes
