@@ -21,7 +21,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          password: ${{ secrets.PAT }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
@@ -32,7 +32,7 @@ jobs:
 
       - name: Make image public
         run: |
-          curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          curl -H "Authorization: token ${{ secrets.PAT }}" \
                -H "Accept: application/vnd.github.v3+json" \
                https://api.github.com/orgs/${{ github.repository_owner }}/packages/container/my-python-app/versions \
                -d '{"visibility": "public"}'
