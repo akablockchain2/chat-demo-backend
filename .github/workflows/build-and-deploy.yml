@@ -43,7 +43,7 @@ jobs:
 
       - name: Verify AWS and kubectl setup
         run: |
-          сat ~/.kube/config
+          cat ~/.kube/config
           kubectl --kubeconfig ~/.kube/config get svc
 
       - name: Deploy to Kubernetes
