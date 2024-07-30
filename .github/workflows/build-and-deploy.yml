@@ -32,12 +32,12 @@ jobs:
 
       - name: Set image public using GitHub CLI
         env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
+          GITHUB_TOKEN: ${{ secrets.CR_PAT }}
         run: |
           # Get the package ID for the Docker image
           PACKAGE_ID=$(gh api graphql -f query='
             query {
-              organization(login: "${{ github.repository_owner }}") {
+              user(login: "${{ github.repository_owner }}") {
                 packages(first: 100, names: ["chat-demo-backend"]) {
                   nodes {
                     id
@@ -45,7 +45,7 @@ jobs:
                 }
               }
             }
-          ' --jq '.data.organization.packages.nodes[0].id')
+          ' --jq '.data.user.packages.nodes[0].id')
           
           # Make the Docker image public
           gh api graphql -f query='
