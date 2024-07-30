@@ -29,30 +29,3 @@ jobs:
           context: .
           push: true
           tags: ghcr.io/${{ github.repository_owner }}/chat-demo-backend:latest
-
-      - name: Set image public using GitHub CLI
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        run: |
-          # Get the package version ID for the Docker image
-          PACKAGE_VERSION_ID=$(gh api graphql -f query='
-            query {
-              user(login: "${{ github.repository_owner }}") {
-                packages(first: 100, names: ["chat-demo-backend"]) {
-                  nodes {
-                    versions(first: 1) {
-                      nodes {
-                        id
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ' --jq '.data.user.packages.nodes[0].versions.nodes[0].id')
-          
-          # Make the Docker image public
-          gh api --method PATCH \
-            -H "Accept: application/vnd.github.v3+json" \
-            /user/packages/container/chat-demo-backend/versions/$PACKAGE_VERSION_ID \
-            -f visibility=public
