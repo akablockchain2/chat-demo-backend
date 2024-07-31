@@ -30,8 +30,14 @@ jobs:
 #          push: true
 #          tags: ghcr.io/${{ github.repository_owner }}/chat-demo-backend:latest
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v2.0
+        with:
+          version: 'v1.24.0' # default is latest stable
+        id: install
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -41,16 +47,26 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Setup kubeconfig
+      - name: Build, Tag, and Push Docker Image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: EKSTestingimage
+          IMAGE_TAG: latest
         run: |
-          aws eks update-kubeconfig --region us-east-1 --name demo
+          docker build -t akablockchain2 .
+          docker tag akablockchain2:latest public.ecr.aws/d6v9g0z8/akablockchain2:latest
+          docker push public.ecr.aws/d6v9g0z8/akablockchain2:latest
 
-      - name: Verify AWS and kubectl setup
-        run: |
-          kubectl --kubeconfig ~/.kube/config config view --minify
-          kubectl --kubeconfig ~/.kube/config get svc
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl --kubeconfig ~/.kube/config apply -f k8s/k8s-deployment.yaml
-          kubectl --kubeconfig ~/.kube/config apply -f k8s/k8s-service.yaml
+#      - name: Setup kubeconfig
+#        run: |
+#          aws eks update-kubeconfig --region us-east-1 --name demo
+#
+#      - name: Verify AWS and kubectl setup
+#        run: |
+#          kubectl --kubeconfig ~/.kube/config config view --minify
+#          kubectl --kubeconfig ~/.kube/config get svc
+#
+#      - name: Deploy to Kubernetes
+#        run: |
+#          kubectl --kubeconfig ~/.kube/config apply -f k8s/k8s-deployment.yaml
+#          kubectl --kubeconfig ~/.kube/config apply -f k8s/k8s-service.yaml
