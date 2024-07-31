@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Retrieve Kubernetes Services
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  retrieve-services:
     runs-on: ubuntu-latest
 
     steps:
@@ -18,18 +18,11 @@ jobs:
           role-to-assume: arn:aws:iam::272405777365:role/github-action-role
           aws-region: us-east-1
 
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
       - name: Setup kubeconfig
         run: |
           aws eks update-kubeconfig --region us-east-1 --name demo
+          cat ~/.kube/config
 
-      - name: Get SVC
-        env:
-          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          REPOSITORY: EKSTestingimage
-          IMAGE_TAG: latest
+      - name: Get Kubernetes Services
         run: |
           kubectl get svc
