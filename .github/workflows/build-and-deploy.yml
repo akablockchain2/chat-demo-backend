@@ -53,6 +53,8 @@ jobs:
           REPOSITORY: EKSTestingimage
           IMAGE_TAG: latest
         run: |
+          pwd
+          ls
           docker build -t akablockchain2 .
           docker tag akablockchain2:latest public.ecr.aws/d6v9g0z8/akablockchain2:latest
           docker push public.ecr.aws/d6v9g0z8/akablockchain2:latest
