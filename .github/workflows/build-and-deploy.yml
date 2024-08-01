@@ -37,6 +37,11 @@ jobs:
           kubectl config get-contexts
           kubectl config current-context
 
+      - name: Debug Kubernetes Authentication
+        run: |
+          kubectl get nodes
+          kubectl cluster-info
+
       - name: Get Kubernetes Services
         run: |
           kubectl get svc
