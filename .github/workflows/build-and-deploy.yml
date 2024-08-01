@@ -18,7 +18,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          role-to-assume: arn:aws:iam::272405777365:role/eks-cluster-demo
+          role-to-assume:  arn:aws:iam::272405777365:role/eks-node-group-nodes
           aws-region: us-east-1
 
       - name: Install AWS CLI
