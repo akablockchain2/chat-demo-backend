@@ -18,14 +18,8 @@ jobs:
           role-to-assume: arn:aws:iam::272405777365:role/github3
           aws-region: us-east-1
 
-      - name: Setup kubeconfig
+      - name: Update Kubeconfig and Retrieve Services
         run: |
           aws eks update-kubeconfig --region us-east-1 --name demo
-
-      - name: Check current Kubernetes context
-        run: |
           kubectl config current-context
-
-      - name: Get Kubernetes Services
-        run: |
           kubectl get svc
