@@ -21,12 +21,12 @@ spec:
             - name: DATABASE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: db-credentials-secret
+                  name: db-credentials-secret2
                   key: DB_PASSWORD
             - name: DATABASE_USER
               valueFrom:
                 secretKeyRef:
-                  name: db-credentials-secret
+                  name: db-credentials-secret2
                   key: DB_USERNAME
             - name: DATABASE_NAME
               value: "postgres"
