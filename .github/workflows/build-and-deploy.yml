@@ -12,23 +12,23 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-#
-#      - name: Set up Docker Buildx
-#        uses: docker/setup-buildx-action@v1
-#
-#      - name: Log in to GitHub Container Registry
-#        uses: docker/login-action@v1
-#        with:
-#          registry: ghcr.io
-#          username: ${{ github.repository_owner }}
-#          password: ${{ secrets.PAT }}
-#
-#      - name: Build and push Docker image
-#        uses: docker/build-push-action@v2
-#        with:
-#          context: .
-#          push: true
-#          tags: ghcr.io/${{ github.repository_owner }}/chat-demo-backend:latest
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.PAT }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          push: true
+          tags: ghcr.io/${{ github.repository_owner }}/chat-demo-backend:latest
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -42,14 +42,8 @@ jobs:
         run: |
           aws eks update-kubeconfig --region us-east-1 --name demo
 
-      - name: Check current Kubernetes context
-        run: |
-          kubectl config current-context
-
-      - name: Get Kubernetes Services
-        run: |
-          kubectl get svc
-
       - name: Deploy to Kubernetes
         run: |
           kubectl apply -f k8s/k8s-deployment.yaml
+          kubectl apply -f k8s/k8s-service.yaml
+          kubectl apply -f k8s/k8s-autoscaler.yaml
